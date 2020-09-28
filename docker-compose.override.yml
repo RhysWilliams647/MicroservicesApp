@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  cataloguedb:
+    container_name: cataloguedb
+    restart: always
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/site:/data/db
+    ports:
+      - "27017:27017"
+  catalogue.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8001 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+      - "CatalogueDatabaseSettings:ConnectionString=mongodb://cataloguedb:27017"
+    depends_on:
+      - cataloguedb
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "8000:80"
+      - "8001:443"
