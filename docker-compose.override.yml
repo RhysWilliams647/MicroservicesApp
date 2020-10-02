@@ -5,9 +5,23 @@ services:
     container_name: cataloguedb
     restart: always
     volumes:
-      - ${WEBAPP_STORAGE_HOME}/site:/data/db
+      - ${WEBAPP_STORAGE_HOME}/microservicesApp/catalogue:/data/db
     ports:
       - "27017:27017"
+
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   catalogue.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -24,3 +38,23 @@ services:
     ports:
       - "8000:80"
       - "8001:443"
+
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8001 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+      - "ConnectionStrings:Redis=basketdb:6379"
+      - "EventBus:HostName=rabbitmq"
+    depends_on:
+      - basketdb
+      - rabbitmq
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "5000:80"
+      - "5001:443"
+
