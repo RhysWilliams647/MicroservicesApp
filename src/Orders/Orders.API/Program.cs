@@ -34,6 +34,7 @@ namespace Orders.API
             {
                 var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(e, "Failed to seed order data");
+                throw e;
             }
         }
 

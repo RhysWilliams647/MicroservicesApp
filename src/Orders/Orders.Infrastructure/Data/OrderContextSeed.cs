@@ -32,7 +32,9 @@ namespace Orders.Infrastructure.Data
                     var log = loggerFactory.CreateLogger<OrderContextSeed>();
                     log.LogError(e, "Failed to seed database");
                     await SeedAsync(context, loggerFactory, retry);
+                    return;
                 }
+                throw e;
             }
         }
 

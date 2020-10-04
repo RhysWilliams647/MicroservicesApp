@@ -7,6 +7,9 @@ services:
   basketdb:
     image: redis
 
+  orderdb:
+    image: mcr.microsoft.com/mssql/server
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
 
@@ -21,4 +24,18 @@ services:
     build:
       context: .
       dockerfile: src/Basket/Basket.API/Dockerfile
+
+
+  orders.api:
+    image: ${DOCKER_REGISTRY-}ordersapi
+    build:
+      context: .
+      dockerfile: src/Orders/Orders.API/Dockerfile
+
+
+  ocelotapigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateway/OcelotApiGateway/Dockerfile
 

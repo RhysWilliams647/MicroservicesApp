@@ -15,6 +15,14 @@ services:
     ports:
       - "6379:6379"
 
+  orderdb:
+    container_name: orderdb
+    ports:
+      - "1433:1433"
+    environment:
+      MSSQL_SA_PASSWORD: "SwN12345678"
+      ACCEPT_EULA: "Y"
+
   rabbitmq:
     container_name: rabbitmq
     restart: always
@@ -23,6 +31,7 @@ services:
       - "15672:15672"
 
   catalogue.api:
+    container_name: catalogueapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -40,6 +49,7 @@ services:
       - "8001:443"
 
   basket.api:
+    container_name: basketapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -57,4 +67,45 @@ services:
     ports:
       - "5000:80"
       - "5001:443"
+
+
+  orders.api:
+    container_name: ordersapi
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5003 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+      - "ConnectionStrings:OrderConnection=Server=orderdb;Database=OrderDb;User Id=sa;Password=SwN12345678"
+      - "EventBus:HostName=rabbitmq"
+    depends_on:
+      - orderdb
+      - rabbitmq
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "5002:80"
+      - "5003:443"
+
+  ocelotapigateway:
+    container_name: ocelotapigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=7001 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+    depends_on:
+      - catalogueapi
+      - basketapi
+      - ordersapi
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "7000:80"
+      - "7001:443"
 
