@@ -49,6 +49,7 @@ namespace EventBusRabbitMQ
             if (disposed) return;
 
             connection.Dispose();
+            disposed = true;
         }
     }
 }

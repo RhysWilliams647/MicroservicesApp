@@ -2,11 +2,9 @@
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
 using EventBusRabbitMQ.Events;
-using EventBusRabbitMQ.Producer;
 using EventBusRabbitMQ.Producer.Interfaces;
 using EventBusRabbitMQ.Settings;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
