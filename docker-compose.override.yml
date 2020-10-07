@@ -99,9 +99,9 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
     depends_on:
-      - catalogueapi
-      - basketapi
-      - ordersapi
+      - catalogue.api
+      - basket.api
+      - orders.api
     volumes:
       - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
       - ${HOME}/.aspnet/https:/root/.aspnet/https/
@@ -109,3 +109,23 @@ services:
       - "7000:80"
       - "7001:443"
 
+  aspnetrunbasics:
+    container_name: aspnetrunbasics
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5005 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pa$$w0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+      - "ApiSettings:BaseAddress=ocelotapigateway"
+    depends_on:
+      - catalogue.api
+      - basket.api
+      - orders.api
+      - ocelotapigateway
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "5006:80"
+      - "5005:443"

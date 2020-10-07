@@ -1,10 +1,10 @@
 {
-  "ReRoute": [
-    //  Catalogue API
+  "ReRoutes": [
+    //Catalog API
     {
-      "DownStreamPathTemplate": "/api/v1/catalogue",
-      "DownStreamPathScheme": "http",
-      "DownStreamPathHostAndPorts": [
+      "DownstreamPathTemplate": "/api/v1/Catalogue",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
         {
           "Host": "catalogueapi",
           "Port": "80"
@@ -14,9 +14,9 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
-      "DownStreamPathTemplate": "/api/v1/catalogue/{id}",
-      "DownStreamPathScheme": "http",
-      "DownStreamPathHostAndPorts": [
+      "DownstreamPathTemplate": "/api/v1/Catalogue/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
         {
           "Host": "catalogueapi",
           "Port": "80"
@@ -26,15 +26,15 @@
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Catalog/GetProductByCategory/{category}",
+      "DownstreamPathTemplate": "/api/v1/Catalogue/GetProductByCategory/{category}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "catalogapi",
+          "Host": "catalogueapi",
           "Port": "80"
         }
       ],
-      "UpstreamPathTemplate": "/Catalog/GetProductByCategory/{category}",
+      "UpstreamPathTemplate": "/Catalogue/GetProductByCategory/{category}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     //Basket API
@@ -80,7 +80,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "orderingapi",
+          "Host": "ordersapi",
           "Port": "80"
         }
       ],
